@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hotel Booking</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div><a href="index.html">Home</a></div>
+    <div>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="filter">
+      <input type="text" id="city-filter" placeholder="Filter by city">
+      <button id="filter-btn">Filter</button>
+      <button id="reset-btn">Reset</button>
+    </div>
+
+    <div id="hotels" class="card-container"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

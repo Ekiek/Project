@@ -2,39 +2,49 @@ from django.db import models
 from django.conf import settings
 from decimal import Decimal
 
+
 class Hotel(models.Model):
+    api_id = models.IntegerField(unique=True, null=True, blank=True)
     name = models.CharField(max_length=200)
     city = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image_url = models.URLField(blank=True)
+    image_url = models.URLField(blank=True, null=True) 
 
     def __str__(self):
         return f"{self.name} ({self.city})"
+
 
 class Room(models.Model):
     SINGLE = 'single'
     DOUBLE = 'double'
     DELUXE = 'deluxe'
+    SUIT = 'suit'
+    FAMILY = 'family'
+
     ROOM_TYPES = [
         (SINGLE, 'Single Room'),
         (DOUBLE, 'Double Room'),
         (DELUXE, 'Deluxe Room'),
+        (SUIT, 'Suit Room'),
+        (FAMILY, 'Family Room'),
     ]
 
     hotel = models.ForeignKey(Hotel, related_name='rooms', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     room_type = models.CharField(max_length=10, choices=ROOM_TYPES)
     price_per_night = models.DecimalField(max_digits=8, decimal_places=2)
-    image_url = models.URLField(blank=True)
+    image_url = models.URLField(blank=True)  # 🆕 ოთახის სურათი
     description = models.TextField(blank=True)
+    api_hotel_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.hotel.name}"
 
+
 class Booking(models.Model):
     BOOKED = 'booked'
     CANCELED = 'canceled'
-    STATUS_CHOICES = [(BOOKED,'Booked'), (CANCELED,'Canceled')]
+    STATUS_CHOICES = [(BOOKED, 'Booked'), (CANCELED, 'Canceled')]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='bookings', on_delete=models.CASCADE)
     room = models.ForeignKey(Room, related_name='bookings', on_delete=models.CASCADE)

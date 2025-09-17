@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        h2 { color: #e94e4e; }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        table, th, td { border: 1px solid #ccc; }
+        td { padding: 8px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:nth-child(odd) { background-color: #fff; }
+    </style>
+</head>
+<body>
+    <h2>Your booking has canclled ❌</h2>
+    <p>Hello! <b>{{ user.username }}</b>,</p>
+    <p>Your booked room has cancelled:</p>
+    <table>
+        <tr><td><b>Hotel</b></td><td>{{ booking.room.hotel.name }}</td></tr>
+        <tr><td><b>Room</b></td><td>{{ booking.room.name }}</td></tr>
+        <tr><td><b>Check-in</b></td><td>{{ booking.check_in }}</td></tr>
+        <tr><td><b>Check-out</b></td><td>{{ booking.check_out }}</td></tr>
+        <tr><td><b>Total price</b></td><td><b>{{ booking.total_price }} ₾</b></td></tr>
+    </table>
+    <p style="margin-top:20px;">Thanks for using our service!</p>
+</body>
+</html>

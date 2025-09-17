@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Room</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">HotelBooking</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+  </nav>
+
+  <main>
+    <h1>Book Your Room</h1>
+    <div id="room-info" class="room-card">
+      <h2 id="room-name"></h2>
+      <p id="room-price"></p>
+    </div>
+    <div class="booking-form">
+      <label for="guest-name">Guest Name:</label>
+      <input type="text" id="guest-name" placeholder="Your name" required>
+
+      <label for="guest-phone">Phone:</label>
+      <input type="text" id="guest-phone" placeholder="Your phone number" required>
+
+      <label for="check-in">Check-in:</label>
+      <input type="date" id="check-in" required>
+
+      <label for="check-out">Check-out:</label>
+      <input type="date" id="check-out" required>
+
+      <p>Total Price: <span id="total-price">$0</span></p>
+
+      <button id="book-btn">Book Now</button>
+    </div>
+  </main>
+
+  <script type="module" src="js/booked.js"></script>
+</body>
+</html>
