@@ -6,7 +6,6 @@ class Command(BaseCommand):
     help = "Import hotels and their rooms in one go"
 
     def handle(self, *args, **options):
-        # 1️⃣ Import Hotels
         hotels_url = "https://hotelbooking.stepprojects.ge/api/Hotels/GetAll"
         response = requests.get(hotels_url)
 
@@ -15,7 +14,7 @@ class Command(BaseCommand):
             return
 
         hotels_data = response.json()
-        hotel_map = {}  # API ID -> Hotel object
+        hotel_map = {}  
 
         for h in hotels_data:
             hotel, created = Hotel.objects.get_or_create(
@@ -34,7 +33,6 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.WARNING(f"↔ Hotel exists: {hotel.name}"))
 
-        # 2️⃣ Import Rooms
         rooms_url = "https://hotelbooking.stepprojects.ge/api/Rooms/GetAll"
         response = requests.get(rooms_url)
 
@@ -45,14 +43,13 @@ class Command(BaseCommand):
         rooms_data = response.json()
 
         for r in rooms_data:
-            hotel_id = r.get("hotelId")  # დარწმუნდი, რომ API JSON-ში არის hotelId
+            hotel_id = r.get("hotelId") 
             hotel = hotel_map.get(hotel_id)
 
             if not hotel:
                 self.stdout.write(self.style.WARNING(f"⚠ Hotel not found for room: {r.get('name')} ({hotel_id})"))
                 continue
 
-            # Room type validation
             valid_room_types = dict(Room.ROOM_TYPES).keys()
             room_type = r.get("room_type", "single")
             if room_type not in valid_room_types:
