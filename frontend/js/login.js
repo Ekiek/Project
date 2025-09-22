@@ -8,7 +8,7 @@ loginForm.addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value.trim();
 
   try {
-    const res = await fetch(`${API_BASE_URL}/token/`, { // უკანა urls: /api/token/
+    const res = await fetch(`${API_BASE_URL}/token/`, { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
@@ -35,7 +35,7 @@ loginForm.addEventListener("submit", async (e) => {
 });
 
 export async function loginUser(username, password) {
-  const res = await fetch(`${API_BASE_URL}/api/api-token-auth/`, {
+  const res = await fetch(`${API_BASE_URL}/token/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })

@@ -1,18 +1,24 @@
-
 from django.urls import path, include
-from rest_framework.authtoken import views
 from rest_framework.routers import DefaultRouter
-from .views import HotelViewSet, RoomViewSet, BookingViewSet, RegisterView, CustomAuthToken, CurrentUserView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from .views import (
+    HotelViewSet,
+    RoomViewSet,
+    BookingViewSet,
+    RegisterView,
+    CurrentUserView,
+)
 
 router = DefaultRouter()
-router.register(r'hotels', HotelViewSet)
-router.register(r'rooms', RoomViewSet) 
-router.register(r'bookings', BookingViewSet)
+router.register(r'hotels', HotelViewSet, basename='hotel')
+router.register(r'rooms', RoomViewSet, basename='room')
+router.register(r'bookings', BookingViewSet, basename='booking')
 
-app_name = "api"
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegisterView.as_view(), name='register'),
-    path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
-    path('users/me/', CurrentUserView.as_view(), name='current_user'),
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'), 
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('me/', CurrentUserView.as_view(), name='current-user'),
 ]

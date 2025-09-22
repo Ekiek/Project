@@ -251,3 +251,130 @@ footer {
     align-items: center;
   }
 }
+
+/* ======================
+   Filters (Enhanced)
+====================== */
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+  gap: 0.5rem;
+  background-color: #ecf0f1;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.filters input,
+.filters select {
+  padding: 0.5rem 0.8rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 180px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.filters input:focus,
+.filters select:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 5px rgba(26,188,156,0.5);
+}
+
+.filters button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #1abc9c;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.filters button:hover {
+  background-color: #16a085;
+  transform: translateY(-2px);
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filters input,
+  .filters select,
+  .filters button {
+    width: 100%;
+  }
+}
+
+/* Modify Booking Page - select styling */
+#room {
+  width: 100%;              /* სიგანე კონტეინერის */
+  padding: 10px 15px;       /* შიგნიდან padding */
+  font-size: 16px;           /* ტექსტის ზომა */
+  border: 1px solid #ccc;    /* ზოლი */
+  border-radius: 8px;        /* გარსის რბილი კუთხეები */
+  background-color: #fff;    /* ფონური ფერი */
+  appearance: none;          /* ზოგჯერ ბრაუზერის ნაგულისხმევი სტილი გამორთო */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;           /* მაუსის კურსორი */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#room:focus {
+  border-color: #4a90e2;     /* ფოკუსზე */
+  box-shadow: 0 0 5px rgba(74,144,226,0.5);
+  outline: none;
+}
+
+/* Arrow icon – optional */
+#room-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+#room-wrapper::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
+  font-size: 12px;
+}
+
+.card .actions {
+  display: flex;
+  gap: 10px; /* დაშორება ღილაკებს შორის */
+}
+
+.cancel-btn,
+.modify-btn {
+  flex: 1; /* ორივე ერთნაირი სიგანის გახდება */
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #ff4d4d;
+}
+
+.modify-btn {
+  background-color: #007bff;
+}
+
+.modify-btn:hover {
+  background-color: #0056b3;
+}

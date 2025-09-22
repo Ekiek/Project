@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Account - HotelBooking</title>
+  <title>Modify Booking - HotelBooking</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -18,19 +18,28 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
   <main class="container">
-    <h1>My Bookings</h1>
-    <div id="booking-list" class="card-container">
-      <!-- JS will load bookings here -->
-    </div>
+    <h1>Modify Booking</h1>
+    <form id="modify-form">
+      <label for="room">Room:</label>
+      <select id="room" name="room"></select>
+
+      <label for="check-in">Check-in:</label>
+      <input type="date" id="check-in" name="check_in" required>
+
+      <label for="check-out">Check-out:</label>
+      <input type="date" id="check-out" name="check_out" required>
+
+      <button type="submit" class="cancel-btn">Save Changes</button>
+      
+    </form>
+    <p id="message" style="color:red;"></p>
   </main>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; 2025 HotelBooking. All rights reserved.</p>
   </footer>
 
-<script type="module" src="./js/account.js"></script>
+  <script type="module" src="./js/modify-booking.js"></script>
 </body>
 </html>
