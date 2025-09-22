@@ -1,59 +1,90 @@
-import { getRooms } from "./api.js";
+import { API_BASE_URL } from "./config.js";
+import { getStoredAccessToken, getAuthHeaders } from "./api.js";
 
 const roomsContainer = document.getElementById("rooms");
 
+const loginLink = document.getElementById("login-link");
+const registerLink = document.getElementById("register-link");
+const accountLink = document.getElementById("account-link");
+const logoutBtn = document.getElementById("logout-btn");
+const userInfo = document.getElementById("user-info");
 
-const urlParams = new URLSearchParams(window.location.search);
-const hotelId = urlParams.get("hotel");
+const token = localStorage.getItem("token");
 
-async function loadRooms() {
-  if (!hotelId) {
-    roomsContainer.innerHTML = "<p>No hotel selected.</p>";
+// --- Load user info ---
+ async function loadUser() {
+  if (!token) {
+    loginLink.style.display = "inline";
+    registerLink.style.display = "inline";
+    accountLink.style.display = "none";
+    logoutBtn.style.display = "none";
+    userInfo.textContent = "";
     return;
   }
-
   try {
-    const rooms = await getRooms(hotelId);
-    if (!rooms.length) {
-      roomsContainer.innerHTML = "<p>No rooms available for this hotel.</p>";
-      return;
-    }
-    renderRooms(rooms);
+    const res = await fetch(`${API_BASE_URL}/users/me/`, { headers: getAuthHeaders(false) });
+    if (!res.ok) throw new Error("no user");
+    const user = await res.json();
+    userInfo.textContent = `Welcome, ${user.username}`;
+    loginLink.style.display = "none";
+    registerLink.style.display = "none";
+    accountLink.style.display = "inline";
+    logoutBtn.style.display = "inline";
   } catch (err) {
-    roomsContainer.innerHTML = `<p>Error loading rooms: ${err.message}</p>`;
+    console.warn("user fetch failed", err);
+    // თუ token არასწორია, წავშალე და ვაჩვენოთ ლინკები
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("token");
+    loginLink.style.display = "inline";
+    registerLink.style.display = "inline";
+    accountLink.style.display = "none";
+    logoutBtn.style.display = "none";
+    userInfo.textContent = "";
   }
 }
+loadUser();
 
-function renderRooms(rooms) {
-  roomsContainer.innerHTML = "";
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("username");
+  window.location.reload();
+});
 
-  rooms.forEach(room => {
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <img src="${room.image_url || 'https://via.placeholder.com/400x180'}" alt="${room.name}">
-      <div class="info">
+// load rooms (viewable without login; RoomViewSet.AllowAny)
+async function loadRooms() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/rooms/`);
+    const rooms = await res.json();
+    roomsContainer.innerHTML = rooms.map(room => `
+      <div class="card">
+        <img src="${room.image_url || '/static/default.jpg'}" alt="${room.name}">
         <h3>${room.name}</h3>
-        <p>Type: ${room.room_type}</p>
-        <p>Price: $${room.price_per_night}/night</p>
-        <button class="book-btn">Book Now</button>
+        <p>Hotel: ${room.hotel.name || room.hotel_name}</p>
+        <p>Price: $${room.price_per_night} per night</p>
+        <button class="book-btn" data-roomid="${room.id}">Book</button>
       </div>
-    `;
-
-    const bookBtn = div.querySelector(".book-btn");
-    bookBtn.addEventListener("click", () => goToBooking(room));
-
-    roomsContainer.appendChild(div);
-  });
+    `).join("");
+  } catch (err) {
+    roomsContainer.innerHTML = "<p>Failed to load rooms.</p>";
+    console.error(err);
+  }
 }
-
-function goToBooking(room) {
-  localStorage.setItem("selectedRoomId", room.id);
-  localStorage.setItem("selectedRoomPrice", room.price_per_night);
-  localStorage.setItem("selectedRoomName", room.name);
-
-  window.location.href = "booked.html";
-}
-
 loadRooms();
+
+// Book button handler (delegation)
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("book-btn")) {
+    const roomId = e.target.dataset.roomid;
+    // Save selectedRoom minimally
+    localStorage.setItem("selectedRoomId", roomId);
+    // if not logged in -> save redirect and go to login
+    if (!getStoredAccessToken()) {
+      localStorage.setItem("redirectAfterLogin", `booked.html?room=${roomId}`);
+      window.location.href = "login.html";
+      return;
+    }
+    // else go to booked page with query param
+    window.location.href = `booked.html?room=${roomId}`;
+  }
+});

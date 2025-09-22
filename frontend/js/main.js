@@ -1,47 +1,66 @@
-import { getHotels } from "./api.js";
+import { getHotels, logout } from "./api.js";
 
 const hotelsContainer = document.getElementById("hotels");
-const cityFilter = document.getElementById("city-filter");
-const filterBtn = document.getElementById("filter-btn");
-const resetBtn = document.getElementById("reset-btn");
+const userInfoEl = document.getElementById("user-info");
+const loginLink = document.getElementById("login-link");
+const registerLink = document.getElementById("register-link");
+const accountLink = document.getElementById("account-link");
+const logoutBtn = document.getElementById("logout-btn");
 
-let allHotels = [];
-
-async function loadHotels() {
-  try {
-    allHotels = await getHotels();
-    renderHotels(allHotels);
-  } catch (err) {
-    hotelsContainer.innerHTML = `<p>Error loading hotels: ${err.message}</p>`;
+// --- Navbar
+function updateNavbar() {
+  const username = localStorage.getItem("username");
+  if (username) {
+    userInfoEl.textContent = `Welcome, ${username}`;
+    loginLink.style.display = "none";
+    registerLink.style.display = "none";
+    accountLink.style.display = "inline-block";
+    logoutBtn.style.display = "inline-block";
+  } else {
+    userInfoEl.textContent = "";
+    loginLink.style.display = "inline-block";
+    registerLink.style.display = "inline-block";
+    accountLink.style.display = "none";
+    logoutBtn.style.display = "none";
   }
 }
 
-function renderHotels(hotels) {
-  hotelsContainer.innerHTML = "";
-  hotels.forEach(hotel => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <img src="${hotel.image_url || 'https://via.placeholder.com/400x180'}" alt="${hotel.name}">
-      <div class="info">
+logoutBtn.addEventListener("click", () => {
+  logout();
+  updateNavbar();
+  window.location.href = "index.html";
+});
+
+updateNavbar();
+
+// --- Load Hotels (index.html)
+async function loadHotels() {
+  if (!hotelsContainer) return;
+  try {
+    const hotels = await getHotels();
+    hotelsContainer.innerHTML = "";
+    hotels.forEach(hotel => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${hotel.image_url || 'default.jpg'}" alt="${hotel.name}">
         <h3>${hotel.name}</h3>
         <p>${hotel.city}</p>
-        <button onclick="window.location.href='rooms.html?hotel=${hotel.id}'">View Rooms</button>
-      </div>
-    `;
-    hotelsContainer.appendChild(div);
-  });
+        <p>${hotel.description || ''}</p>
+        <button data-id="${hotel.id}" data-name="${hotel.name}">View Rooms</button>
+      `;
+      hotelsContainer.appendChild(card);
+
+      card.querySelector("button").addEventListener("click", () => {
+        localStorage.setItem("selectedHotelId", hotel.id);
+        localStorage.setItem("selectedHotelName", hotel.name);
+        window.location.href = "rooms.html";
+      });
+    });
+  } catch (err) {
+    hotelsContainer.innerHTML = "<p>Failed to load hotels.</p>";
+    console.error(err);
+  }
 }
-
-filterBtn.addEventListener("click", () => {
-  const city = cityFilter.value.trim().toLowerCase();
-  const filtered = allHotels.filter(h => h.city.toLowerCase().includes(city));
-  renderHotels(filtered);
-});
-
-resetBtn.addEventListener("click", () => {
-  cityFilter.value = "";
-  renderHotels(allHotels);
-});
 
 loadHotels();
