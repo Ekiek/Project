@@ -153,15 +153,24 @@ export function getAuthHeaders(json = true) {
 // --- Generic fetch with JSON + error handling
 export async function fetchJSON(url, opts = {}) {
   const res = await fetch(url, opts);
-  const text = await res.text();
-  let data;
-  try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+
+  const contentType = res.headers.get("content-type") || "";
+  let data = null;
+
+  if (contentType.includes("application/json")) {
+    data = await res.json();
+  } else {
+    // ცარიელი ან non-JSON response
+    data = await res.text();
+  }
+
   if (!res.ok) {
     const err = new Error(data?.detail || data?.error || `HTTP ${res.status}`);
     err.status = res.status;
     err.data = data;
     throw err;
   }
+
   return data;
 }
 
@@ -183,7 +192,7 @@ export async function getRooms(hotelId = "") {
 export async function register(username, email, password) {
   return await fetchJSON(`${API_BASE_URL}/register/`, {
     method: "POST",
-    headers: getAuthHeaders(),
+    headers: { "Content-Type": "application/json" }, 
     body: JSON.stringify({ username, email, password })
   });
 }
@@ -192,7 +201,7 @@ export async function register(username, email, password) {
 export async function login(username, password) {
   const data = await fetchJSON(`${API_BASE_URL}/token/`, {
     method: "POST",
-    headers: getAuthHeaders(),
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   });
   localStorage.setItem("accessToken", data.access);

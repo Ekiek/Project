@@ -4,22 +4,22 @@
   <meta charset="UTF-8">
   <style>
     body { font-family: Arial, sans-serif; color: #333; }
-    h2 { color: #28a745; }
+    h2 { color: #007bff; }
     table { border-collapse: collapse; width: 100%; margin-top: 15px; }
     table, th, td { border: 1px solid #ccc; }
     td { padding: 8px; }
   </style>
 </head>
 <body>
-  <h2>Booking Confirmed ✅</h2>
+  <h2>Booking Updated ✏️</h2>
   <p>Hello <b>{{ user.username }}</b>,</p>
-  <p>Your booking has been confirmed successfully. Here are the details:</p>
+  <p>Your booking details have been updated. Here is the new information:</p>
   <table>
     <tr><td><b>Hotel</b></td><td>{{ booking.room.hotel.name }}</td></tr>
     <tr><td><b>Room</b></td><td>{{ booking.room.name }}</td></tr>
     <tr><td><b>Check-in</b></td><td>{{ booking.check_in }}</td></tr>
     <tr><td><b>Check-out</b></td><td>{{ booking.check_out }}</td></tr>
   </table>
-  <p>We are looking forward to hosting you!</p>
+  <p>If you did not request this change, please contact support immediately.</p>
 </body>
 </html>

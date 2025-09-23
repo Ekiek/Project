@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <a href="index.html" class="logo">HotelBooking</a>
     <div class="nav-links">
@@ -19,28 +18,30 @@
   </nav>
 
   <div class="filters">
-  <input type="text" id="city-filter" placeholder="City">
-  <input type="number" id="max-price-filter" placeholder="Max Price">
-  <select id="room-type-filter">
-    <option value="">All Types</option>
-    <option value="single">Single</option>
-    <option value="double">Double</option>
-    <option value="deluxe">Deluxe</option>
-    <option value="suite">Suite</option>
-    <option value="family">Family</option>
-  </select>
-  <button id="filter-btn">Search</button>
-  <button id="reset-btn">Reset</button>
+  <form id="filter-form" class="filters-form">
+    <input type="text" id="city-filter" name="city" placeholder="City">
+    <input type="number" id="max-price-filter" name="max_price" placeholder="Max Price">
+    <select id="room-type-filter" name="room_type">
+      <option value="">All Types</option>
+      <option value="single">Single</option>
+      <option value="double">Double</option>
+      <option value="deluxe">Deluxe</option>
+      <option value="suite">Suite</option>
+      <option value="family">Family</option>
+    </select>
+    <button type="submit">Search</button>
+    <button type="button" id="reset-btn">Reset</button>
+  </form>
 </div>
   <main class="container">
     <h1 id="hotel-name">Available Rooms</h1>
     <div id="rooms" class="card-container">
       
-      <!-- JS will load rooms here -->
+   
     </div>
   </main>
 
-  <!-- Footer -->
+
   <footer>
     <p>&copy; 2025 HotelBooking. All rights reserved.</p>
   </footer>
@@ -50,7 +51,6 @@
 <script type="module" src="./js/user.js"></script>
 <script type="module" src="./js/main.js"></script>
 <script type="module" src="./js/rooms.js"></script>
-  
- 
+   
 </body>
 </html>

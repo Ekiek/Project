@@ -1,7 +1,5 @@
-// booked.js
 import { API_BASE_URL } from "./config.js";
 
-// --- Helper Functions ---
 function getStoredAccessToken() {
   return localStorage.getItem("accessToken");
 }
@@ -14,7 +12,7 @@ function getAuthHeaders(isJson = true) {
   return headers;
 }
 
-// --- DOM Elements ---
+
 const guestNameInput = document.getElementById("guest-name");
 const guestPhoneInput = document.getElementById("guest-phone");
 const checkInInput = document.getElementById("check-in");
@@ -24,7 +22,6 @@ const bookBtn = document.getElementById("book-btn");
 const roomNameEl = document.getElementById("room-name");
 const roomPriceEl = document.getElementById("room-price");
 
-// --- Get roomId from query param or localStorage ---
 const params = new URLSearchParams(window.location.search);
 const roomId = params.get("room") || localStorage.getItem("selectedRoomId");
 
@@ -33,13 +30,11 @@ if (!roomId) {
   window.location.href = "rooms.html";
 }
 
-// --- Redirect if not logged in ---
 if (!getStoredAccessToken()) {
   localStorage.setItem("redirectAfterLogin", `booked.html?room=${roomId}`);
   window.location.href = "login.html";
 }
 
-// --- Load Room Details ---
 async function loadRoom() {
   try {
     const res = await fetch(`${API_BASE_URL}/rooms/${roomId}/`);
@@ -54,7 +49,6 @@ async function loadRoom() {
 }
 loadRoom();
 
-// --- Update Total Price ---
 function updateTotalPrice() {
   const checkIn = new Date(checkInInput.value);
   const checkOut = new Date(checkOutInput.value);
@@ -69,7 +63,6 @@ function updateTotalPrice() {
 checkInInput.addEventListener("change", updateTotalPrice);
 checkOutInput.addEventListener("change", updateTotalPrice);
 
-// --- Booking ---
 bookBtn.addEventListener("click", async () => {
   const guest_name = guestNameInput.value.trim();
   const guest_phone = guestPhoneInput.value.trim();
@@ -81,36 +74,34 @@ bookBtn.addEventListener("click", async () => {
     return;
   }
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/bookings/`, {
-      method: "POST",
-      headers: getAuthHeaders(true),
-      body: JSON.stringify({
-        room: parseInt(roomId, 10),
-        guest_name,
-        guest_phone,
-        check_in,
-        check_out
-      })
-    });
+try {
+  const res = await fetch(`${API_BASE_URL}/bookings/`, {
+    method: "POST",
+    headers: getAuthHeaders(true),
+    body: JSON.stringify({
+      room: parseInt(roomId, 10),
+      guest_name,
+      guest_phone,
+      check_in,
+      check_out
+    })
+  });
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => null);
-      if (res.status === 401) {
-        alert("Please login first");
-        localStorage.setItem("redirectAfterLogin", `booked.html?room=${roomId}`);
-        window.location.href = "login.html";
-        return;
-      }
-      throw new Error(errorData?.room || errorData?.detail || "Booking failed");
-    }
+  console.log("Response status:", res.status);
 
-    const data = await res.json();
-    alert(data.message || "Booked successfully!");
-    window.location.href = "account.html";
-
-  } catch (err) {
-    console.error("Booking error:", err);
-    alert(err.message || "Booking failed");
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("Error response:", errText);
+    alert("Booking failed: " + errText);
+    return;
   }
+
+  const data = await res.json();
+  alert(data.message || "Successfully booked!");
+  window.location.href = "account.html";
+
+} catch (err) {
+  console.error("Fetch error:", err);
+  alert("Booking failed: " + err.message);
+}
 });

@@ -2,7 +2,7 @@ import { API_BASE_URL } from "./config.js";
 import { getStoredAccessToken, getAuthHeaders } from "./api.js";
 
 const roomsContainer = document.getElementById("rooms");
-const filterForm = document.getElementById("filter-form"); // assume form wrapping your filters
+const filterForm = document.getElementById("filter-form"); 
 
 const loginLink = document.getElementById("login-link");
 const registerLink = document.getElementById("register-link");
