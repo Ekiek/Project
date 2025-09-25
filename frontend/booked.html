@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <title>Book Room</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
   <nav class="navbar">
@@ -35,12 +39,13 @@
         <input type="text" id="guest-phone" placeholder="+995 5XX XXX XXX">
       </label>
       <label>
-        Check-in:
-        <input type="date" id="check-in">
+      Check-in:
+        <input type="text" id="check-in" placeholder="Select check-in date">
       </label>
+
       <label>
         Check-out:
-        <input type="date" id="check-out">
+       <input type="text" id="check-out" placeholder="Select check-out date">
       </label>
       <p>Total price: <span id="total-price">$0</span></p>
 
